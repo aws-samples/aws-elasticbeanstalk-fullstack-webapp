@@ -1,0 +1,79 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "volumes": [
+    {
+      "name": "service2",
+      "host": {
+        "sourcePath": "/opt/elasticbeanstalk"
+      }
+    },
+    {
+      "name": "service2-etc",
+      "host": {
+        "sourcePath": "/etc/elasticbeanstalk"
+      }
+    },
+    {
+      "name": "var",
+      "host": {
+        "sourcePath": "/var/app/current/.env"
+      }
+    }
+  ],
+  "containerDefinitions": [
+    {
+      "name": "service1",
+      "image": "service1-docker-image", 
+      "essential": true,
+      "memory": 200,
+      "cpu": 1,
+      "environment": [
+        {
+          "name": "PORT",
+          "value": "3000"
+        }
+      ],
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "protocol": "tcp",
+          "containerPort": 3000
+        }
+      ]
+    },
+    {
+      "name": "service2",
+      "image": "service2-docker-image",
+      "essential": true,
+      "memory": 200,
+      "cpu": 1,
+      "environment": [
+        {
+          "name": "PORT",
+          "value": "5100"
+        }
+      ],
+      "portMappings": [
+        {
+          "hostPort": 5100,
+          "protocol": "tcp",
+          "containerPort": 5100
+        }
+      ],
+      "mountPoints": [ 
+        {
+          "sourceVolume": "service2",
+          "containerPath": "/opt/elasticbeanstalk"
+        },
+        {
+          "sourceVolume": "service2-etc",
+          "containerPath": "/etc/elasticbeanstalk"
+        },
+        {
+          "sourceVolume": "var",
+          "containerPath": "/app/.env"
+        }
+      ]  
+    }
+  ]
+}

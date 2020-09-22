@@ -1,0 +1,6 @@
+api-sns/node_modules
+api-db/node_modules
+
+api-sns/.elasticbeanstalk
+api-db/.elasticbeanstalk
+multi-docker/.elasticbeanstalk
