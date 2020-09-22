@@ -3,10 +3,10 @@ import { Modal, Button } from "react-bootstrap";
 import Loader from "react-loader";
 
 export default class SignUp extends React.Component {
+    errorMessage = "An error occured while registering. Please try again later";
     constructor(props) {
         super(props);
-        this.state = {name: '', email: '', phone: '', successMessage: '', 
-                        errorMessage:'', isOpen:false, loaded: true};
+        this.state = {name: '', email: '', phone: '', errorMessage: '', isOpen: false, loaded: true, isError: false};
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleEmailChange = this.handleEmailChange.bind(this);
         this.handlePhoneChange = this.handlePhoneChange.bind(this);
@@ -35,8 +35,6 @@ export default class SignUp extends React.Component {
     }
     // this handler would calls the sign up API for updating the user details in the backend
     signUp = () => {
-        this.setState({successMessage : ''});
-        this.setState({errorMessage : ''});  
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -46,7 +44,7 @@ export default class SignUp extends React.Component {
                 phone: this.state.phone.toString()
             })
         };
-        this.setState({loaded: false});
+        this.setState({loaded: false, isError: false});
         fetch(process.env.REACT_APP_DB_SIGNUP_API, requestOptions)
         //handle any non-network errors
         .then(this.handleErrors)
@@ -59,15 +57,13 @@ export default class SignUp extends React.Component {
             },
             // api error
             (error) => {
-                this.setState({loaded: true});
+                this.setState({loaded: true, isError: true});
                 console.log(error);
-                this.setState({errorMessage : 'An error occured. Please try again'})
             }
         )
         //catch status check error 
         .catch((error) => {
-            this.setState({loaded: true});
-            this.setState({errorMessage : 'An error occured. Please try again'});
+            this.setState({loaded: true, isError: true});
         }
       )
     };
@@ -93,14 +89,12 @@ export default class SignUp extends React.Component {
             // api error
             (error) => {
                 console.log(error);
-                this.setState({loaded: true});
-                this.setState({errorMessage : 'An error occured. Please try again'})
+                this.setState({loaded: true, isError: true});
             }
         )
         // catch status check error
         .catch((error) => {
-            this.setState({loaded: true});
-            this.setState({errorMessage : 'An error occured. Please try again'})
+            this.setState({loaded: true,  isError: true});
          }
         )
     };
@@ -130,9 +124,11 @@ export default class SignUp extends React.Component {
                     <button type="button" disabled={!this.state.email || !this.state.name || !this.state.phone} className="btn btn-primary btn-lg" 
                             onClick={this.signUp}>Sign Up
                     </button>
+                    
                     <div className="row">
-                        <div>{this.state.successMessage}</div>
-                        <div>{this.state.errorMessage}</div>
+                        {this.state.isError === true && (
+                            <div className="col-lg err">{this.errorMessage}</div>
+                        )}
                     </div>
                     <Modal show={this.state.isOpen} onHide={this.closeModal} >
                         <Modal.Header closeButton>
@@ -140,9 +136,11 @@ export default class SignUp extends React.Component {
                                 <Modal.Title>Registered</Modal.Title>
                             </h3>
                         </Modal.Header>
-                        <Modal.Body>Hey {this.state.name}, you have been successfully registered for this product</Modal.Body>
+                        <Modal.Body>
+                            Hey {this.state.name}, you have been successfully registered for this product
+                        </Modal.Body>
                         <Modal.Footer>
-                        <Button variant="secondary" onClick={this.closeModal}>Close</Button>
+                            <Button variant="secondary" onClick={this.closeModal}>Close</Button>
                         </Modal.Footer>
                     </Modal>
             </div>
