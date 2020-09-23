@@ -45,7 +45,7 @@ export default class SignUp extends React.Component {
             })
         };
         this.setState({loaded: false, isError: false});
-        fetch(process.env.REACT_APP_DB_SIGNUP_API, requestOptions)
+        fetch(process.env.REACT_APP_DB_SIGNUP_API + '/signupdb', requestOptions)
         //handle any non-network errors
         .then(this.handleErrors)
         .then( 
@@ -77,7 +77,7 @@ export default class SignUp extends React.Component {
                 email: this.state.email.toString()
             })
         };
-        fetch(process.env.REACT_APP_SNS_SIGNUP_API, requestOptions)
+        fetch(process.env.REACT_APP_SNS_SIGNUP_API + '/signupsns', requestOptions)
         // handle non-network errors
         .then(this.handleErrors)
         .then( 
