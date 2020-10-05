@@ -4,6 +4,8 @@ This is a simple web application for creating a user registration form and deplo
 
 This web app is created using React for the Front End and NodeJS for the API's. There are two API's. The first API updates the User Registration information to DynamoDB and the second one publishes an email to the subscribed SNS topic. The SNS topic is susbscribed by Elastic Beanstalk during the creation. The DynamoDB Database is created by using AWS CDK(Cloud Deployment Kit).
 
+![launch step3](/images/beanstalk-workshop-arch.png) 
+
 _Please follow the below steps to deploy this app to AWS._
 
 ## Development Environment Setup:
